@@ -56,6 +56,7 @@ dotnet add reference [File Path]
 |       | Data
 |Data.Tests | Data
 |Repository.Tests | Repository
+| | Data
 
 *The Data folder holding your POCO won't need to reference any other files as this is our base file.*
 
