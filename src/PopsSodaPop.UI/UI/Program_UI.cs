@@ -118,16 +118,28 @@ using System.Threading.Tasks;
                         DeleteStore();
                         break;
                     case "6":
+                        // Add Employee
+                        AddEmployeeToDatabase();
                         break;
                     case "7":
+                        // View All Employee
+                        ViewAllEmployees();
                         break;
                     case "8":
+                        // View One Employee
+                        ViewEmployeeByID();
                         break;
                     case "9":
+                        // Add Vendor
+                        AddVendorToDatabase();
                         break;
                     case "10":
+                        // View All Vendors
+                        ViewAllVendors();
                         break;
                     case "11":
+                        // View One Vendor
+                        ViewVendorByID();
                         break;
                     case "x":
                         // Close application
@@ -496,12 +508,137 @@ using System.Threading.Tasks;
             );
         }
 
+        private void AddEmployeeToDatabase() // Switch Option 6
+        {
+            Console.Clear();
+
+            var newEmployee = new Employee();
+            System.Console.WriteLine("==== EMPLOYEE ENLISTING FORM ==== \n");
+
+            System.Console.WriteLine("Please Enter the Employees First Name: ");
+            newEmployee.FirstName = Console.ReadLine(); // taking the user input and storing it a variable.
+            System.Console.WriteLine("Please Enter the Employees Last Name: ");
+            newEmployee.LastName = Console.ReadLine();
+
+            //? Using the Employee's repo method to add to the DB.
+            bool isSuccessful = _eRepo.AddEmployeeToDatabase(newEmployee); // Employee Repo method. storing result in "isSuccessful" variable.
+
+            if (isSuccessful)
+            {
+                System.Console.WriteLine($"{newEmployee.FirstName} {newEmployee.LastName} was added to the Database.");
+            }
+
+            PressAnyKey();
+        }
+
+        public void ViewAllEmployees() // Switch Option 7
+    {
+        Console.Clear();
+
+        List<Employee> employeesInDB = _eRepo.GetAllEmployees();
+
+        if (employeesInDB.Count > 0)
+        {
+            foreach (Employee e in employeesInDB)
+            {
+                DisplayEmployeeInfo(e);
+            }
+        }
+        else
+        {
+            System.Console.WriteLine("There are no employees.");
+        }
+
+        PressAnyKey();
+    }
+
+        public void ViewEmployeeByID() // Switch Option 8
+        {
+            Console.Clear();
+
+            System.Console.WriteLine("=== Employee Detail Menu === \n");
+            System.Console.WriteLine("Please enter an employee ID: \n");
+            int inputEmployeeID = int.Parse(Console.ReadLine());
+
+            Employee employee = _eRepo.GetEmployeeByID(inputEmployeeID);
+
+            if(employee != null)
+            {
+                DisplayEmployeeInfo(employee);
+            }
+            else
+            {
+                System.Console.WriteLine($"No employee with an ID: {inputEmployeeID}");
+            }
+
+            PressAnyKey();
+        }
+
         //NOTE: Vendor Methods
         private void DisplayVendorInfo(Vendor vendor) // HELPER METHOD
         {
             System.Console.WriteLine(
                 $" \tVendor ID: {vendor.ID} \n \tVendor Name: {vendor.Name} \n"
             );
+        }
+
+        private void AddVendorToDatabase() // Switch Option 9
+        {
+            Console.Clear();
+
+            Vendor newVendor = new Vendor();
+            System.Console.WriteLine("=== Vendor Enlist Form === \n");
+            System.Console.WriteLine("Please enter a Vendor Name: ");
+            newVendor.Name = Console.ReadLine();
+
+            bool isSuccessful = _vRepo.AddVendorToDatabase(newVendor);
+
+            if (isSuccessful)
+            {
+                System.Console.WriteLine($"{newVendor.Name} was added to the database.");
+            }
+            else 
+            {
+                System.Console.WriteLine("Failed to add vendor.");
+            }
+
+            PressAnyKey();
+        }
+
+        private void ViewAllVendors() // Switch Option 10
+        {
+            Console.Clear();
+
+            List<Vendor> vendors = _vRepo.GetAllVendors();
+            
+            foreach (var v in vendors)
+            {
+                DisplayVendorInfo(v);
+            }
+
+            PressAnyKey();
+        }
+
+        private void ViewVendorByID() // Switch Option 11
+        {
+            Console.Clear();
+
+            System.Console.WriteLine("=== Vendor Detail Menu === \n");
+            System.Console.WriteLine("Please enter a Vendor ID: \n");
+
+            int inputVendorID = int.Parse(Console.ReadLine());
+            Vendor vendor = _vRepo.GetVendorByID(inputVendorID);
+
+            if(vendor != null)
+            {
+                DisplayVendorInfo(vendor);
+            }
+            else
+            {
+                System.Console.WriteLine($"No Vendor with ID: {inputVendorID}");
+            }
+
+            PressAnyKey();
         }
 
         //NOTE: Close App
@@ -519,5 +656,15 @@ using System.Threading.Tasks;
             Console.ReadKey();
         }
 
+        //NOTE: Challenges
+        /*
+        ! Additional Challenges:
+            - Add delete functionality to both Employee and Vendors
+            - When wanting to view one of STORE/EMPLOYEE/VENDOR, try to create a way to call upon the list so it's easier to select an ID.
+            - Can you clean up the code so that there isn't anything repeating? 
+                - How can we use the DRY (Don't Repeat Yourself) concepts with this console app?
+            - There is a small bug, nothing game-breaking, but could be annoying. Can you find it when testing? Did we note it upon the build? How can we possibly clean this up?
+
+        */
     }
 // }
