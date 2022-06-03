@@ -98,8 +98,8 @@ using System.Threading.Tasks;
                 switch(userInput.ToLower())
                 {
                     case "1":
-                        Add a Store
-                        // AddStoreToDatabase();
+                        // Add a Store
+                        AddStoreToDatabase();
                         break;
                     case "2":
                         // View All Store
